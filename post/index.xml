@@ -479,6 +479,7 @@ data-flex-basis="522px"
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="设置评论">设置评论&lt;/h2>
+&lt;p>采用Disqus作为评论系统，只需要更改网站根目录中的&lt;code>config.yaml&lt;/code>文件中&lt;code>disqusShortname&lt;/code>的值即可，改为Disqus的账户名称（需要注册Disqus账户并且用邮箱激活）。&lt;/p>
 &lt;h1 id="发布文章">发布文章&lt;/h1>
 &lt;p>上面用的是&lt;code>index.md&lt;/code>来存放文章内容，所以写新文章的时候用：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
