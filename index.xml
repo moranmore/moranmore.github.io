@@ -1,11 +1,182 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hfwjher's site</title><link>https://hfwjher.love/</link><description>Recent content on Hfwjher's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 05 Jul 2023 10:47:10 +0800</lastBuildDate><atom:link href="https://hfwjher.love/index.xml" rel="self" type="application/rss+xml"/><item><title>Test1</title><link>https://hfwjher.love/posts/test1/</link><pubDate>Wed, 05 Jul 2023 10:47:10 +0800</pubDate><guid>https://hfwjher.love/posts/test1/</guid><description>&lt;h1 id="测试">测试&lt;/h1>
-&lt;p>图片测试&lt;/p></description></item><item><title>Hugo+GithubPages+Actions博客搭建</title><link>https://hfwjher.love/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link><pubDate>Thu, 29 Jun 2023 02:03:52 +0800</pubDate><guid>https://hfwjher.love/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hfwjher's site</title><link>https://hfwjher.love/</link><description>Recent content on Hfwjher's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 21 Aug 2023 05:52:28 +0800</lastBuildDate><atom:link href="https://hfwjher.love/index.xml" rel="self" type="application/rss+xml"/><item><title>快速搭建crypto交互型题目</title><link>https://hfwjher.love/p/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAcrypto%E4%BA%A4%E4%BA%92%E5%9E%8B%E9%A2%98%E7%9B%AE/</link><pubDate>Mon, 21 Aug 2023 05:52:28 +0800</pubDate><guid>https://hfwjher.love/p/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAcrypto%E4%BA%A4%E4%BA%92%E5%9E%8B%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="搭建环境">搭建环境&lt;/h1>
+&lt;p>vps使用的是Ubuntu20.04+docker&lt;/p>
+&lt;p>dockerfile一般用官方给出来的就行，或者找一个能交互的题目的dockerfile（比赛结束之后去discord或者github）。我的实例中没有用到socket库，这种docker不需要。&lt;/p>
+&lt;p>在这里不详细解释更细致的内容，一般情况下需要更改的部分是dockerfile中的python版本，额外的库，其他的直接按照部署docker的方式来就行，测试的时候如果中断可能是网络问题。&lt;/p>
+&lt;h1 id="实例">实例&lt;/h1>
+&lt;p>这是一个交互计算的题目，需要通过计算100个乘法运算，获取最终的flag。&lt;/p>
+&lt;h2 id="dockerfile">dockerfile&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="line">&lt;span class="cl">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> python:3.10&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># dockerfile of test&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> apt update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> apt upgrade -y&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> apt install socat -y&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">RUN&lt;/span> pip install pycryptodome&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># modify here,from src to dst&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">ADD&lt;/span> calculator.py task.py &lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">ADD&lt;/span> secret.py secret.py&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># modify EXEC:&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">CMD&lt;/span> socat -T &lt;span class="m">2&lt;/span> -dd -v &amp;gt;/dev/stdout TCP-L:60000,fork,reuseaddr EXEC:&lt;span class="s2">&amp;#34;python -u task.py&amp;#34;&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="task-script">task script&lt;/h2>
+&lt;p>calculator.py:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">random&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">secret&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">flag&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">rounds&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">welcome&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&amp;#34; .----------------. .----------------. .----------------. .----------------.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| .--------------. || .--------------. || .--------------. || .--------------. |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | _________ | || | _________ | || | _______ | || | _________ | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | | _ _ | | || | |_ ___ | | || | / ___ | | || | | _ _ | | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | |_/ | | \_| | || | | |_ \_| | || | | (__ \_| | || | |_/ | | \_| | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | | | | || | | _| _ | || | &amp;#39;.___`-. | || | | | | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | _| |_ | || | _| |___/ | | || | |`\____) | | || | _| |_ | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | |_____| | || | |_________| | || | |_______.&amp;#39; | || | |_____| | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| | | || | | || | | || | | |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">| &amp;#39;--------------&amp;#39; || &amp;#39;--------------&amp;#39; || &amp;#39;--------------&amp;#39; || &amp;#39;--------------&amp;#39; |
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> &amp;#39;----------------&amp;#39; &amp;#39;----------------&amp;#39; &amp;#39;----------------&amp;#39; &amp;#39;----------------&amp;#39; &amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">task&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">welcome&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rounds&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">b&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">randint&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1000&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="n">random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">randint&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1000&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">c&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">b&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cho&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Please input your answer of &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">*&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">:&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">cho&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Right!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">exit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Wrong...&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Here is your flag:&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">flag&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">task&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>secret.py:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">uuid&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">uuid1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># test = &amp;#34;flag{&amp;#34;+str(uuid1()) + &amp;#34;}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># print(test)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">flag&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;flag{.....}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="write-up">write up&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># solve.py&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pwn&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="o">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ip&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">port&lt;/span>&lt;span class="o">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">p&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">remote&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ip&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">port&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">pad&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;Please input your answer of &amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">p&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">recvlines&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">11&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 跳过welcome&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">while&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">res&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">p&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">recv&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">res&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="sa">b&lt;/span>&lt;span class="s2">&amp;#34;flag{&amp;#34;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">res&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">exit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">res&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">l&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">res&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">pad&lt;/span>&lt;span class="p">):&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">b&lt;/span>&lt;span class="s2">&amp;#34;*&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ans&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">l&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">l&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">p&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sendline&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">bytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ans&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">()))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">a&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">recvline&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="bash">bash&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker build -t &lt;span class="nb">test&lt;/span> .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># vps端口：容器端口， 容器名称：镜像名称&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d -p 50000:60000 --name cryptotest &lt;span class="nb">test&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 这样容器一直在运行，只需要nc访问对应的端口就可以了&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="其他">其他&lt;/h1>
+&lt;h2 id="ascii艺术字">ASCII艺术字&lt;/h2>
+&lt;p>有时候题目开始的时候会有一个题目的名字显示，在终端中用ascii艺术字展示的，这里有网站可以实现这种方法(或者搜索ascii艺术字也可以)：&lt;/p>
+&lt;p>&lt;a class="link" href="https://patorjk.com/software/taag/#p=display&amp;amp;f=Graffiti&amp;amp;t=Type%20Something%20" target="_blank" rel="noopener"
+>艺术字网站：patorjk&lt;/a>&lt;/p>
+&lt;h2 id="域名端口的说明">域名+端口的说明&lt;/h2>
+&lt;p>一些比赛给的靶机带有域名，可以使用反向代理，但是我没有试过，有时间可能会试试（可能有更简单的方法，有时间研究一下）。&lt;/p></description></item><item><title>Hugo+GithubPages+Actions博客搭建</title><link>https://hfwjher.love/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link><pubDate>Thu, 29 Jun 2023 02:03:52 +0800</pubDate><guid>https://hfwjher.love/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
 &lt;p>已经试过的搭建博客的方式：&lt;/p>
 &lt;p>1.从0开始搭建一个wordpress的博客（第一个服务器上搭建过）。&lt;/p>
 &lt;p>2.Hexo+github pages搭建博客（后来没维护彻底放飞了）。&lt;/p>
 &lt;p>3.cpanel 的wordpress博客（没动力写，最后跟着域名一起没了，其实是买错site了，应该买vps的）。&lt;/p>
 &lt;p>4.hugo+github pages第一次搭建（后来没更新）。&lt;/p>
-&lt;p>5.vps上试用docker-compose最后成功搭建wordpress（现在还在用）。&lt;/p>
+&lt;p>5.vps上试用docker-compose最后成功搭建wordpress（因为没设置docker日志大小限制，把vps占完了，文章备份了就删了）。&lt;/p>
 &lt;p>6.标题（刚搭建好）。&lt;/p>
 &lt;h1 id="优势">优势&lt;/h1>
 &lt;p>对于docker搭建wordpress的博客是很舒服的，不用考虑图床之类的问题。只需要担心的是wordpress插件会不会出问题之类的， 配置需要一些时间，反向代理域名和端口，还有CF配置SSL等。&lt;/p>
@@ -283,9 +454,10 @@ data-flex-basis="522px"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>这个文章中下含有了文章&lt;code>index.md&lt;/code>和图片&lt;code>报错实例&lt;/code>，这个图片的名字是可以命名的，这样也好在本地使用。&lt;/p>
-&lt;h3 id="设置avatarpng">设置avatar.png&lt;/h3>
+&lt;h1 id="站点修改">站点修改&lt;/h1>
+&lt;h2 id="设置avatarpng">设置avatar.png&lt;/h2>
 &lt;p>在根目录中的&lt;code>assets&lt;/code>文件夹中新建&lt;code>img&lt;/code>文件夹，放入&lt;code>avatar.png&lt;/code>。&lt;/p>
-&lt;h3 id="站点头像">站点头像&lt;/h3>
+&lt;h2 id="站点头像">站点头像&lt;/h2>
 &lt;p>实际目录：&lt;code>/static/images/favicon.ico&lt;/code>&lt;/p>
 &lt;p>设置：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -306,270 +478,23 @@ data-flex-basis="522px"
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">favicon&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">/images/favicon.ico &lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考">参考&lt;/h2>
+&lt;/div>&lt;h2 id="设置评论">设置评论&lt;/h2>
+&lt;h1 id="发布文章">发布文章&lt;/h1>
+&lt;p>上面用的是&lt;code>index.md&lt;/code>来存放文章内容，所以写新文章的时候用：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">hugo&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">post&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="mf">2023&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="err">文章标题&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">index&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nb">md
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样图片直接复制到当前文件夹就行了。&lt;/p>
+&lt;h2 id="参考">参考&lt;/h2>
 &lt;p>Hugo actions的指导：https://github.com/peaceiris/actions-hugo&lt;/p>
 &lt;p>报错解决：https://www.youtube.com/watch?v=DMgEGpqXEM4&lt;/p>
 &lt;p>主题gitmodules：https://github.com/gohugoio/hugoThemes/blob/master/.gitmodules&lt;/p>
-&lt;p>标题无法从一级标题开始显示：https://huweim.github.io/post/blog_hugo_%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/&lt;/p></description></item><item><title>Hugo+GithubPages+Actions博客搭建</title><link>https://hfwjher.love/posts/hugo+githubpages+actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link><pubDate>Thu, 29 Jun 2023 02:03:52 +0800</pubDate><guid>https://hfwjher.love/posts/hugo+githubpages+actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid><description>&lt;h1 id="none">None&lt;/h1>
-&lt;p>等什么时候出问题我再更新这篇文章。&lt;/p>
-&lt;p>已经试过的搭建博客的方式：&lt;/p>
-&lt;p>1.从0开始搭建一个wordpress的博客（第一个服务器上搭建过）。&lt;/p>
-&lt;p>2.Hexo+github pages搭建博客（后来没维护彻底放飞了）。&lt;/p>
-&lt;p>3.cpanel 的wordpress博客（没动力写，最后跟着域名一起没了，其实是买错site了，应该买vps的）。&lt;/p>
-&lt;p>4.hugo+github pages第一次搭建（后来没更新）。&lt;/p>
-&lt;p>5.vps上试用docker-compose最后成功搭建wordpress（现在还在用）。&lt;/p>
-&lt;p>6.标题（刚搭建好）。&lt;/p>
-&lt;h1 id="优势">优势&lt;/h1>
-&lt;p>对于docker搭建wordpress的博客是很舒服的，不用考虑图床之类的问题。只需要担心的是wordpress插件会不会出问题之类的， 配置需要一些时间，反向代理域名和端口，还有CF配置SSL等。&lt;/p>
-&lt;p>hugo相比hexo生成据说好用一些，但是本文不是争论这些。首先hugo部署很方便，而且环境配置只需要配置环境变量然后就能用了。配置问题主要是Actions的部分，还有就是CF的ip添加一次只能添加一个，比Google的麻烦一些。但是Actions确实很好用，省去了本地生成的麻烦。&lt;/p>
-&lt;h1 id="部署">部署&lt;/h1>
-&lt;p>首先，需要拥有一个github账号，并且在这个账号中建立两个仓库：&lt;/p>
-&lt;p>1.用于存储hugo site的源码，并且在这个仓库中加入Actions的文件，用于实现github的actions生成。&lt;/p>
-&lt;p>2.用于存储生成之后的网站的源码，这个仓库就是用于展示的仓库。&lt;/p>
-&lt;p>完成前置条件之后，部署博客的大体思路是这样的：&lt;/p>
-&lt;p>作者首先安装Go语言的环境和hugo，然后初始化site，配置本地的site文件，推送到github的源码仓库，由源码仓库中的actions执行生成&lt;code>name.github.io&lt;/code>仓库中的内容，打开这个链接就可以访问了，之后配置cloudflare之类的比较简单了。&lt;/p>
-&lt;h2 id="go和hugo环境配置">go和hugo环境配置&lt;/h2>
-&lt;p>下载go语言的安装包，添加bin目录到环境变量中（win平台是安装的，所以不需要）：&lt;/p>
-&lt;p>下载地址：https://go.dev/dl/&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">tar&lt;/span> &lt;span class="n">-zxvf&lt;/span> &lt;span class="s1">&amp;#39;下载的文件名字&amp;#39;&lt;/span> &lt;span class="n">go&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 添加环境变量&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="nv">$PATH&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">go&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">bin&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">authorized_keys&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>安装hugo并且配置hugo&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 下载地址：https://github.com/gohugoio/hugo/releases&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 解压缩到对应的目录，然后添加环境变量，当在win中运行&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">where &lt;/span>&lt;span class="n">hugo&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">#如果有结果就说明hugo配置好了&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>在网站的父目录中创建网站：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">hugo&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">site&lt;/span> &lt;span class="s2">&amp;#34;your site&amp;#39;s name&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>添加主题，因为这个时候的hugo网站是没有主题的，所以需要添加主题，在此之前，先说明hugo在本地的生成是有两种的，一种是&lt;code>hugo server -D&lt;/code>这种是生成所有的文章预览，包括草稿，如果开始的框中的&lt;code>draft:true&lt;/code>这种情况下，只用&lt;code>hugo server&lt;/code>是无法生成预览的，把true改为false，才能生成预览，这种情况之下，及时推送到github然后actions也没有文章可以看到。&lt;/p>
-&lt;p>清除git所用的代理配置：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">config&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="n">-global&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="n">-unset&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">proxy&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">config&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="n">-global&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="n">-unset&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">proxy&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 手动删除 ~/.gitconfig 也可以实现重置配置的效果&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>将&lt;code>theme\examplseSite&lt;/code>里面的config.yoml东西复制出来，放到网站的根目录中，这时候就基本相当于配置好了一个基本的网站了（里面的内容还是examplesite的）。&lt;/p>
-&lt;h2 id="推送到github">推送到github&lt;/h2>
-&lt;p>推送到github需要有两个步骤，首先需要将账户登录到git，这里需要配置密钥对，生成的方式：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ssh-keygen&lt;/span> &lt;span class="n">-t&lt;/span> &lt;span class="n">rsa&lt;/span> &lt;span class="n">-b&lt;/span> &lt;span class="mf">4096&lt;/span> &lt;span class="n">-C&lt;/span> &lt;span class="s2">&amp;#34;deploy_github_pages&amp;#34;&lt;/span> &lt;span class="o">-f&lt;/span> &lt;span class="s1">&amp;#39;这里是你想要给密钥的命名&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 生成一个key文件还有一个key.pub文件（假设在-f之后的名字是key）&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>第一个密钥对：&lt;/p>
-&lt;p>首先配置github认证需要的两个密钥，私钥放到本地，公钥上传到Settins|SSH and GPG keys|Authentication Keys 这里。&lt;/p>
-&lt;p>然后就可以git来推送文件了。&lt;/p>
-&lt;p>第二个密钥对：&lt;/p>
-&lt;p>用于连接两个仓库，一个是私有仓库用于存放hugo site根目录中的所有文件，在这个仓库中的&lt;code>Settings|Secrets and variables|&lt;/code>中部署私钥，这里的私钥就是类似key里面的内容，直接全部复制到里面就行了，这里的名字要记住，然后在actions中的文件配置需要用到。&lt;/p>
-&lt;p>公钥的位置放到&lt;code>name.github.io&lt;/code>仓库中的&lt;code>Settings|Deploy keys&lt;/code>位置，建议起名字的时候可以和前面的私钥对应，或者方便识别。&lt;/p>
-&lt;p>配置好了密钥之后，可以初始化本地仓库，完成之后就可以推送到远程的私有仓库，在私有仓库中的actions页面执行生成静态网站的步骤。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">init&lt;/span> &lt;span class="n">-b&lt;/span> &lt;span class="n">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 合并仓库到私有仓库&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">remote&lt;/span> &lt;span class="n">add&lt;/span> &lt;span class="n">origin&lt;/span> &lt;span class="n">git&lt;/span>&lt;span class="nv">@github&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">xxx&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">xxxx&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">git&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 没办法的情况下强行合并&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">push&lt;/span> &lt;span class="o">-f&lt;/span> &lt;span class="n">origin&lt;/span> &lt;span class="n">master&lt;/span> &lt;span class="c">#注意，这一步可能有问题，建议根据自己的实际的branch更改master或者main&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>一般情况下如果顺利的部署步骤是：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># cd 到网站的根目录&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">add&lt;/span> &lt;span class="p">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">commit&lt;/span> &lt;span class="n">-m&lt;/span> &lt;span class="s2">&amp;#34;你为这次推送的评论&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">push&lt;/span> &lt;span class="n">origin&lt;/span> &lt;span class="n">main&lt;/span> &lt;span class="c"># 因为我的分支是main，所以推送到main&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="配置actions">配置actions&lt;/h2>
-&lt;p>actions是一个可以进行自动化测试的工具，比如可以通过配置文件，将源代码生成为&lt;code>./public&lt;/code>中的静态网站，并且推送到一个共有的仓库，这样私有仓库中的一些源码等内容不会在共有仓库中显示。&lt;/p>
-&lt;p>对于github 的actions工具，会有一个类似shell的运行结果，如果出现了失败，会有报错，根据报错搜索就可以找到解决方案，一般来说google出来的结果可以解决，actions的运行报错类似如下：&lt;/p>
-&lt;p>&lt;img src="https://hfwjher.love/images/Hugo&amp;#43;GithubPages&amp;#43;Actions%e5%8d%9a%e5%ae%a2%e6%90%ad%e5%bb%ba/image-20230630000932681.png"
-loading="lazy"
-alt="image-20230630000932681"
->&lt;/p>
-&lt;p>这里是私有仓库的actions位置、&lt;/p>
-&lt;p>配置这个文件，需要在网站的根目录中添加目录：&lt;code>.github/workflows/&lt;/code>写一个yml格式的文件。&lt;/p>
-&lt;p>我的文件格式如下：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;span class="lnt">37
-&lt;/span>&lt;span class="lnt">38
-&lt;/span>&lt;span class="lnt">39
-&lt;/span>&lt;span class="lnt">40
-&lt;/span>&lt;span class="lnt">41
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Hugo Blog GitHub Pages Actions&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">on&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">push&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">branches&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">main &lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># Set a branch name to trigger deployment&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">pull_request&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">jobs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">deploy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">runs-on&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu-22.04&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">permissions&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">contents&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">write&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">concurrency&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">group&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">${{ github.workflow }}-${{ github.ref }}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">steps&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">uses&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">actions/checkout@v3.5.3&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">with&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">submodules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># Fetch Hugo themes (true OR recursive)&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">fetch-depth&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># Fetch all history for .GitInfo and .Lastmod&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Setup Hugo&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uses&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">peaceiris/actions-hugo@v2&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">with&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">hugo-version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;0.114.1&amp;#39;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># extended: true&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Build&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">run&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hugo --minify&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deploy&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uses&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">peaceiris/actions-gh-pages@v3&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># If you&amp;#39;re changing the branch from main,&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># also change the `main` in `refs/heads/main`&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># below accordingly.&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">if&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">github.ref == &amp;#39;refs/heads/main&amp;#39;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">with&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">external_repository&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">name/name.github.io &lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 更改这里适配你的仓库&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">deploy_key&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">${{ secrets.xxxxxx }}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#　这里的就是上面提到的私有仓库的私钥&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">publish_branch&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">main&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">publish_dir&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">./public&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>这个文件的配置我也是参考了网上的连接，是一个github仓库，在里面会有指导怎么写yml文件，我这个文件是满足部署，可以运行的。&lt;/p>
-&lt;h2 id="一些报错的解决方式">一些报错的解决方式&lt;/h2>
-&lt;p>在部署的时候，出现&amp;quot;Not submodule&amp;hellip;&amp;hellip;.&amp;quot;（这里的报错涉及到的是主题），这个需要在根目录中写一个名字是&lt;code>.gitmodules&lt;/code>的文件，然后将你的主题的submodule放进去就行，一般hugo的主题有一个仓库是存放了一堆submodule的，在里面更改为如下的方式就好：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 比如我的主题是 hugo-tranquilpeak-theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 添加如下文件到.gitmodules文件中，需要注意的是目录和双引号中的目录问题，和仓库中的有区别&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">submodule&lt;/span> &lt;span class="s2">&amp;#34;themes/hugo-tranquilpeak-theme&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">themes&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">hugo-tranquilpeak&lt;/span>&lt;span class="n">-theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="n">github&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">kakawait&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">hugo-tranquilpeak&lt;/span>&lt;span class="n">-theme&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">git&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>如果markdown文件中出现了错误，也会导致报错，不放心的话可以在push的时候看着actions的运行状态。&lt;/p>
-&lt;p>图片无法显示：&lt;/p>
-&lt;p>设置图片的根目录，在文章首框中加入：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">typora-root-url: ./..\..\static
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 偏好设置：复制到相对路径
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">../../static/images/${filename}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="参考">参考&lt;/h2>
-&lt;p>Hugo actions的指导：https://github.com/peaceiris/actions-hugo&lt;/p>
-&lt;p>报错解决：https://www.youtube.com/watch?v=DMgEGpqXEM4
-主题gitmodules：https://github.com/gohugoio/hugoThemes/blob/master/.gitmodules&lt;/p></description></item><item><title>Archives</title><link>https://hfwjher.love/archives/</link><pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate><guid>https://hfwjher.love/archives/</guid><description/></item><item><title>About</title><link>https://hfwjher.love/about/</link><pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><guid>https://hfwjher.love/about/</guid><description>&lt;p>hello,I am hfwjher.&lt;/p>
+&lt;p>标题无法从一级标题开始显示：https://huweim.github.io/post/blog_hugo_%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/&lt;/p></description></item><item><title>Archives</title><link>https://hfwjher.love/archives/</link><pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate><guid>https://hfwjher.love/archives/</guid><description/></item><item><title>About</title><link>https://hfwjher.love/about/</link><pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><guid>https://hfwjher.love/about/</guid><description>&lt;p>hello,I am hfwjher.&lt;/p>
 &lt;p>A college student.&lt;/p>
 &lt;p>This blog was built on github pages, using Stack(hugo theme).&lt;/p></description></item><item><title>Links</title><link>https://hfwjher.love/links/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://hfwjher.love/links/</guid><description>&lt;p>这是链接的格式：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
