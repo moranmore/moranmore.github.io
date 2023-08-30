@@ -171,13 +171,7 @@
 >艺术字网站：patorjk&lt;/a>&lt;/p>
 &lt;h2 id="域名端口的说明">域名+端口的说明&lt;/h2>
 &lt;p>一些比赛给的靶机带有域名，可以使用反向代理，但是我没有试过，有时间可能会试试（可能有更简单的方法，有时间研究一下）。&lt;/p></description></item><item><title>Hugo+GithubPages+Actions博客搭建</title><link>https://expanse.rsvp/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link><pubDate>Thu, 29 Jun 2023 02:03:52 +0800</pubDate><guid>https://expanse.rsvp/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
-&lt;p>已经试过的搭建博客的方式：&lt;/p>
-&lt;p>1.从0开始搭建一个wordpress的博客（第一个服务器上搭建过）。&lt;/p>
-&lt;p>2.Hexo+github pages搭建博客（后来没维护彻底放飞了）。&lt;/p>
-&lt;p>3.cpanel 的wordpress博客（没动力写，最后跟着域名一起没了，其实是买错site了，应该买vps的）。&lt;/p>
-&lt;p>4.hugo+github pages第一次搭建（后来没更新）。&lt;/p>
-&lt;p>5.vps上试用docker-compose最后成功搭建wordpress（因为没设置docker日志大小限制，把vps占完了，文章备份了就删了）。&lt;/p>
-&lt;p>6.标题（刚搭建好）。&lt;/p>
+&lt;p>之前试过&lt;/p>
 &lt;h1 id="优势">优势&lt;/h1>
 &lt;p>对于docker搭建wordpress的博客是很舒服的，不用考虑图床之类的问题。只需要担心的是wordpress插件会不会出问题之类的， 配置需要一些时间，反向代理域名和端口，还有CF配置SSL等。&lt;/p>
 &lt;p>hugo相比hexo生成据说好用一些，但是本文不是争论这些。首先hugo部署很方便，而且环境配置只需要配置环境变量然后就能用了。配置问题主要是Actions的部分，还有就是CF的ip添加一次只能添加一个，比Google的麻烦一些。但是Actions确实很好用，省去了本地生成的麻烦。&lt;/p>
@@ -480,6 +474,14 @@ data-flex-basis="522px"
 &lt;/div>
 &lt;/div>&lt;h2 id="设置评论">设置评论&lt;/h2>
 &lt;p>采用Disqus作为评论系统，只需要更改网站根目录中的&lt;code>config.yaml&lt;/code>文件中&lt;code>disqusShortname&lt;/code>的值即可，改为Disqus的账户名称（需要注册Disqus账户并且用邮箱激活）。&lt;/p>
+&lt;h2 id="更换域名用户名仓库名字">更换域名、用户名、仓库名字&lt;/h2>
+&lt;h3 id="域名">域名&lt;/h3>
+&lt;p>更换域名需要更换cloudflare的DNS记录，nameserver还给CF的，强制https，A记录添加为185.199.10x.153（x为9-11），代理状态为仅DNS。&lt;/p>
+&lt;h3 id="用户名字">用户名字&lt;/h3>
+&lt;p>如果更换了仓库名字或者github用户名字、域名，需要更改配置文件（ymal中的内容，和hugo.yml external_repository:，static中的CNAME记录，这里可以用everything搜索CNAME修改）。&lt;/p>
+&lt;p>一般是更改config中的内容，改为用户名+github&amp;hellip;的形式，域名需要将所有的旧域名替换成新域名，如果出现无法push的情况，可以更换密钥，添加到公开仓库的时候可以勾选上&lt;code>Allow write access&lt;/code>，可以解决128报错无法推送的问题。&lt;/p>
+&lt;h3 id="报错">报错&lt;/h3>
+&lt;p>如果ssh更新但是没有添加邮箱（-C），可以把私钥名字改为id_rsa重新push。&lt;/p>
 &lt;h1 id="发布文章">发布文章&lt;/h1>
 &lt;p>上面用的是&lt;code>index.md&lt;/code>来存放文章内容，所以写新文章的时候用：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
