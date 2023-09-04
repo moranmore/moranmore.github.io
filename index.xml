@@ -171,16 +171,16 @@
 >艺术字网站：patorjk&lt;/a>&lt;/p>
 &lt;h2 id="域名端口的说明">域名+端口的说明&lt;/h2>
 &lt;p>一些比赛给的靶机带有域名，可以使用反向代理，但是我没有试过，有时间可能会试试（可能有更简单的方法，有时间研究一下）。&lt;/p></description></item><item><title>Hugo+GithubPages+Actions博客搭建</title><link>https://expanse.rsvp/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link><pubDate>Thu, 29 Jun 2023 02:03:52 +0800</pubDate><guid>https://expanse.rsvp/p/hugo-githubpages-actions%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
-&lt;p>之前试过&lt;/p>
+&lt;p>之前试过在blogger和GitHub Pages搭建博客，也用过docker+WordPress搭建，但是后者因为日志过大，加上markdown写起来不是很方面，所以现在又用hugo+GitHub Pages +Actions来搭，这样markdown写起来方便，离线的时候用起来方便&lt;/p>
 &lt;h1 id="优势">优势&lt;/h1>
 &lt;p>对于docker搭建wordpress的博客是很舒服的，不用考虑图床之类的问题。只需要担心的是wordpress插件会不会出问题之类的， 配置需要一些时间，反向代理域名和端口，还有CF配置SSL等。&lt;/p>
-&lt;p>hugo相比hexo生成据说好用一些，但是本文不是争论这些。首先hugo部署很方便，而且环境配置只需要配置环境变量然后就能用了。配置问题主要是Actions的部分，还有就是CF的ip添加一次只能添加一个，比Google的麻烦一些。但是Actions确实很好用，省去了本地生成的麻烦。&lt;/p>
+&lt;p>hugo相比hexo生成个人感觉好用一些。首先hugo部署很方便，而且环境配置只需要配置环境变量然后就能用了。配置问题主要是Actions的部分，还有就是CF的ip添加一次只能添加一个，比Google的麻烦一些。但是Actions确实很好用，省去了本地生成的麻烦，只需要push到博客仓库就行了（此处的博客仓库是一个私有仓库，不是公开的仓库）。&lt;/p>
 &lt;h1 id="部署">部署&lt;/h1>
 &lt;p>首先，需要拥有一个github账号，并且在这个账号中建立两个仓库：&lt;/p>
 &lt;p>1.用于存储hugo site的源码，并且在这个仓库中加入Actions的文件，用于实现github的actions生成。&lt;/p>
 &lt;p>2.用于存储生成之后的网站的源码，这个仓库就是用于展示的仓库。&lt;/p>
 &lt;p>完成前置条件之后，部署博客的大体思路是这样的：&lt;/p>
-&lt;p>作者首先安装Go语言的环境和hugo，然后初始化site，配置本地的site文件，推送到github的源码仓库，由源码仓库中的actions执行生成&lt;code>name.github.io&lt;/code>仓库中的内容，打开这个链接就可以访问了，之后配置cloudflare之类的比较简单了。&lt;/p>
+&lt;p>作者首先安装Go语言的环境和hugo，然后初始化site，配置本地的site文件，推送到github的源码仓库，由源码仓库中的Actions执行生成&lt;code>name.github.io&lt;/code>仓库中的内容，打开这个链接就可以访问了，之后配置cloudflare之类的比较简单了。&lt;/p>
 &lt;h2 id="go和hugo环境配置">go和hugo环境配置&lt;/h2>
 &lt;p>下载go语言的安装包，添加bin目录到环境变量中（win平台是安装的，所以不需要）：&lt;/p>
 &lt;p>下载地址：https://go.dev/dl/&lt;/p>
@@ -493,7 +493,15 @@ data-flex-basis="522px"
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>这样图片直接复制到当前文件夹就行了。&lt;/p>
-&lt;h2 id="参考">参考&lt;/h2>
+&lt;h2 id="双设备">双设备&lt;/h2>
+&lt;p>如果有两个不同系统的笔记本，比如一个Ubuntu和一个Windows，可以在两个设备上同时clone下来仓库，比如已经完成了另一个设备上的git安装，还没clone仓库到本地时候：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="参考">参考&lt;/h1>
 &lt;p>Hugo actions的指导：https://github.com/peaceiris/actions-hugo&lt;/p>
 &lt;p>报错解决：https://www.youtube.com/watch?v=DMgEGpqXEM4&lt;/p>
 &lt;p>主题gitmodules：https://github.com/gohugoio/hugoThemes/blob/master/.gitmodules&lt;/p>
