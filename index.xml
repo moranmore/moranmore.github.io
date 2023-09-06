@@ -510,12 +510,19 @@ data-flex-basis="522px"
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git diff main origin/main &lt;span class="c1"># 比较本地和远程仓库内容区别,如果没有结果就是ok&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git fetch &lt;span class="c1"># 会在不更新本地仓库的情况下获取远程仓库的更新情况&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git diff --stat main origin/main &lt;span class="c1"># 比较本地和远程仓库内容区别,如果没有结果就是ok，如果有区别，视情况选择merge&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git merge &lt;span class="c1"># 将远程已经更新的内容更新到本地&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h1 id="参考">参考&lt;/h1>
+&lt;/div>&lt;p>参考：&lt;a class="link" href="https://stackoverflow.com/questions/73338848/git-diff-show-nothing" target="_blank" rel="noopener"
+>如果git diff无反应怎么办&lt;/a>&lt;/p>
+&lt;p>到此就完成了两个主机上博客的更新部署，只不过需要在更新的时候先检查远程和本地的区别，然后再选择是否更新。&lt;/p>
+&lt;h1 id="参考">参考&lt;/h1>
 &lt;p>Hugo actions的指导：https://github.com/peaceiris/actions-hugo&lt;/p>
 &lt;p>报错解决：https://www.youtube.com/watch?v=DMgEGpqXEM4&lt;/p>
 &lt;p>主题gitmodules：https://github.com/gohugoio/hugoThemes/blob/master/.gitmodules&lt;/p>
