@@ -496,12 +496,24 @@ data-flex-basis="522px"
 &lt;/div>
 &lt;/div>&lt;p>这样图片直接复制到当前文件夹就行了。&lt;/p>
 &lt;h2 id="双设备">双设备&lt;/h2>
-&lt;p>如果有两个不同系统的笔记本，比如一个Ubuntu和一个Windows，可以在两个设备上同时clone下来仓库，比如已经完成了另一个设备上的git安装，还没clone仓库到本地时候：&lt;/p>
+&lt;p>如果有两个不同系统的笔记本，比如一个Ubuntu和一个Windows，可以在两个设备上同时clone下来仓库，比如已经完成了另一个设备上的git安装，还没clone仓库到本地时候。&lt;/p>
+&lt;p>首先将私钥复制到用户目录的ssh文件中，然后在相关目录中直接：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;/code>&lt;/pre>&lt;/td>
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git clone ......
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>发生更新之后，即使博客的更新只有一个人，但是仍然需要检查是不是相比仓库发生了更新，如在win上更新之后但是没有pull，但是mac端先pull 到主要分支，如果下次在win上直接pull而不比较内容，会出现覆盖mac端pull的情况，所以需要检测当前的版本是不是最新的，如果和远程仓库有区别需要先把远程仓库的更新拉到本地然后pull：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git diff main origin/main &lt;span class="c1"># 比较本地和远程仓库内容区别,如果没有结果就是ok&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h1 id="参考">参考&lt;/h1>
 &lt;p>Hugo actions的指导：https://github.com/peaceiris/actions-hugo&lt;/p>
