@@ -1,4 +1,209 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>moranmore's site</title><link>https://expanse.rsvp/</link><description>Recent content on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 21 Aug 2023 05:52:28 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/index.xml" rel="self" type="application/rss+xml"/><item><title>快速搭建crypto交互型题目</title><link>https://expanse.rsvp/p/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAcrypto%E4%BA%A4%E4%BA%92%E5%9E%8B%E9%A2%98%E7%9B%AE/</link><pubDate>Mon, 21 Aug 2023 05:52:28 +0800</pubDate><guid>https://expanse.rsvp/p/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAcrypto%E4%BA%A4%E4%BA%92%E5%9E%8B%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="搭建环境">搭建环境&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>moranmore's site</title><link>https://expanse.rsvp/</link><description>Recent content on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 10 Sep 2023 17:25:39 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac搭建环境</title><link>https://expanse.rsvp/p/mac%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 10 Sep 2023 17:25:39 +0800</pubDate><guid>https://expanse.rsvp/p/mac%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>本文主要记录的是CTF比赛 Crypto类中环境的搭建，根据本人的需要会随时更新文章，等不更新了就说明环境基本没什么变化了。&lt;/p>
+&lt;h1 id="系统">系统&lt;/h1>
+&lt;p>Homebrew的安装(二进制文件安装似乎不是很好用，总是报错)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># https://brew.sh/index_zh-cn&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 或者使用命令；&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 访问bin：https://github.com/Homebrew/brew/releases/tag/4.1.9，使用pkg安装&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/bin/bash -c &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="c1"># 卸载&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/bin/bash -c &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="c1"># 安装&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew doctor
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew cleanup
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>go环境安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># https://go.dev/dl/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew install go
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>hugo安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo chown -R &lt;span class="k">$(&lt;/span>whoami&lt;span class="k">)&lt;/span> /usr/local/opt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">chmod u+w /usr/local/opt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew install hugo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="python">python&lt;/h1>
+&lt;p>python的环境搭建比较简单，只需要安装几个固定的库就可以了，vscode 就能满足条件，这个不需要其他太多的东西，常用的库有如下几个：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">gmpy2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pycryptodome
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sympy &lt;span class="c1"># 自带mpmath&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">numpy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pwntools &lt;span class="c1">#https://pwntools-docs-zh.readthedocs.io/zh_CN/dev/install/binutils.html#mac-os-x&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># pwntools的安装需要预先安装binutils ，最好的方式是git clone 下来之后用shell安装&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git clone https://github.com/Gallopsled/pwntools-binutils.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> pwntools-binutils/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> macos
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./install_all.sh &lt;span class="c1"># 出错是正常的，因为架构的问题，安装不上arm的版本没关系&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 可以试试install.sh 选择全安装在mac上安装和构建花了很久，而且报错很多&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>写一个python的环境安装txt吧：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># mac os env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># requirements.txt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gmpy2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pycryptodome
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sympy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">numpy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pwntools
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pyelftools == 0.29
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="pwntools安装">pwntools安装&lt;/h2>
+&lt;p>python3.9的支持似乎不是很好，准备一个3.10.11试试,这里有两种下载的方式，一种是源码，另一种是安装文件，其中源码提供了tgz文件，这里先用安装包安装了，太麻烦了:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">#https://www.python.org/downloads/macos/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#https://www.python.org/downloads/release/python-31013/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以发现python3.10的启动是通过python3.10的bash指令启动，而不是python3，需要将python3.10.11设置为默认的python版本，并设置相关的库。（看下面，不用设置，改vsc的就行，直接在python3.10里面安装库）&lt;/p>
+&lt;p>反转了，是版本问题，直接改vsc的配置，然后把pwntools的其中依赖库改为0.29&lt;a class="link" href="https://github.com/Gallopsled/pwntools/issues/2260" target="_blank" rel="noopener"
+>🔗&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">pip3 install pyelftools==0.29 # 完事
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>pwntools的安装有些麻烦，在mac上构建binunits总会有各种奇怪的错误：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">brew cleanup binutils
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew install binutils
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew reinstall binutils
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> echo &amp;#39;export PATH=&amp;#34;/usr/local/opt/binutils/bin:$PATH&amp;#34;&amp;#39; &amp;gt;&amp;gt; ~/.profile
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> export LDFLAGS=&amp;#34;-L/usr/local/opt/binutils/lib&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> export CPPFLAGS=&amp;#34;-I/usr/local/opt/binutils/include&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> brew update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还有一些github开源的工具，都可以安装，不过后者就是一些固定的脚本，最后就是一些自己收集的现成脚本之类的了。&lt;/p>
+&lt;p>mac下python的环境配置,在当前打开的工作区中,也可以把这些加入用户的设置中(settings.json)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;code-runner.runInTerminal&amp;#34;&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="err">,&lt;/span> &lt;span class="c1">// 这里的话true是在终端输出结果，false是在输出栏那边输出
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="s2">&amp;#34;python.pythonPath&amp;#34;&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="s2">&amp;#34;/usr/local/bin/python3&amp;#34;&lt;/span>&lt;span class="err">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;code-runner.executorMap&amp;#34;&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;python&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;python3 -u&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>&lt;span class="err">,&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="sagemath">Sagemath&lt;/h1>
+&lt;p>sage是一个开源的数学软件，用于进行一些数学运算，特别是有关代数的相关运算。&lt;/p>
+&lt;p>sage对于windows的支持在9.3，而在linux上的支持较新，如果在linux上安装也是可以的，不过在mac上可以直接安装sage，毕竟sage提供了很多快捷的函数。&lt;/p>
+&lt;p>sage的二进制版本下载：https://github.com/3-manifolds/Sage_macOS/releases。因为笔者的笔记本还是Intel的处理器，所以下载的是x86的dmg文件，现在的Mac应该下载的都是ARM版本的了吧（大概）。截止到2023年秋季，sagemath对于Mac支持到了10.x的版本，相比Windows新了不少，而且直接下载mac版本的sage，可以不需要Linux安装sage那么麻烦。&lt;/p>
+&lt;p>下载完成后直接拖动就行了，一般情况下不需要配置多余的内容。此时下方栏中会有一个sage的图标，点开的时候会提供选项是进入哪个环境。比如会有一个shell和jupyter的环境可以选择，一般个人习惯用jupyter了，比如可以选择jupyter v7，需要注意的是，sage里面需要重新安装上面提到的库才能运行，否则是无法运行上面的库中的函数，也无法导入。&lt;/p>
+&lt;p>sage安装包安装时没问题的，可以正常打开。&lt;/p>
+&lt;h1 id="虚拟机">虚拟机&lt;/h1>
+&lt;p>虚拟机用的是Vmware的Fusion 13Pro，平时快照，备份都还可以。&lt;/p>
+&lt;h1 id="其他软件和应用">其他软件和应用&lt;/h1>
+&lt;h2 id="cyberchef">CyberChef&lt;/h2>
+&lt;p>chef是一个集合了很多功能的软件，无论是在线还是本地，都能使用不仅包含编码、加密解密、查看文件等功能。&lt;/p>
+&lt;h2 id="ciphey">ciphey&lt;/h2>
+&lt;p>ciphey是一个自动工具，但是一般情况是对于英文的识别更好，可以自动解码复杂的编码过程之后的字符串。相关链接：&lt;a class="link" href="https://github.com/Ciphey/Ciphey/blob/master/translations/zh/README.md" target="_blank" rel="noopener"
+>🔗&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">python3 -m pip install ciphey --upgrade
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python3 -m pip install -U ciphey
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>相比chef，ciphey 在处理较为庞大的数据的时候更有优势，但是如果是操作较为复杂的情况下，而且数据规模不大，chef更有优势一些。&lt;/p>
+&lt;p>还有一个问题：&lt;/p>
+&lt;p>&lt;strong>Ciphey doesn&amp;rsquo;t work on Windows with Python 3.9+, use Python 3.7 or Python 3.8. Other platforms are fine with Python 3.9, Python 3.10 doesn&amp;rsquo;t work.&lt;/strong>&lt;/p>
+&lt;p>也就是说，这波只能用python3.9跑了，算了，再下一个3.8，我佛了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">https://www.python.org/downloads/release/python-3810/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew install ciphey
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>总算能用了卧槽了。&lt;/p>
+&lt;h2 id="yafu">yafu&lt;/h2>
+&lt;p>这是一个集合了多种分解大数的工具，但是有些情况下分解出来的可能是合数，如过模数的生成过程小质数的bit大小相同，则需要判断结果中长度，如果有明显的区别，可能是因为没有分解彻底。&lt;/p>
+&lt;p>如果需要运行在虚拟机中，可以考虑安装一个win10的虚拟机，占用不是特别大（安装的软件很少的情况）。&lt;/p>
+&lt;p>这个东西不行就算了，还是整个库吧，配个环境累的不行，真绷不住了。&lt;/p></description></item><item><title>快速搭建crypto交互型题目</title><link>https://expanse.rsvp/p/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAcrypto%E4%BA%A4%E4%BA%92%E5%9E%8B%E9%A2%98%E7%9B%AE/</link><pubDate>Mon, 21 Aug 2023 05:52:28 +0800</pubDate><guid>https://expanse.rsvp/p/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAcrypto%E4%BA%A4%E4%BA%92%E5%9E%8B%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="搭建环境">搭建环境&lt;/h1>
 &lt;p>vps使用的是Ubuntu20.04+docker&lt;/p>
 &lt;p>dockerfile一般用官方给出来的就行，或者找一个能交互的题目的dockerfile（比赛结束之后去discord或者github）。我的实例中没有用到socket库，这种docker不需要。&lt;/p>
 &lt;p>在这里不详细解释更细致的内容，一般情况下需要更改的部分是dockerfile中的python版本，额外的库，其他的直接按照部署docker的方式来就行，测试的时候如果中断可能是网络问题。&lt;/p>
@@ -495,7 +700,7 @@ data-flex-basis="522px"
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>这样图片直接复制到当前文件夹就行了。&lt;/p>
-&lt;h2 id="双设备">双设备&lt;/h2>
+&lt;h1 id="双机更新">双机更新&lt;/h1>
 &lt;p>如果有两个不同系统的笔记本，比如一个Ubuntu和一个Windows，可以在两个设备上同时clone下来仓库，比如已经完成了另一个设备上的git安装，还没clone仓库到本地时候。&lt;/p>
 &lt;p>首先将私钥复制到用户目录的ssh文件中，然后在相关目录中直接：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -525,11 +730,26 @@ data-flex-basis="522px"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git merge
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>参考：&lt;a class="link" href="https://stackoverflow.com/questions/73338848/git-diff-show-nothing" target="_blank" rel="noopener"
+&lt;/div>&lt;p>到此就完成了两个主机上博客的更新部署，只不过需要在更新的时候先检查远程和本地的区别，然后再选择是否更新。&lt;/p>
+&lt;h2 id="报错-1">报错&lt;/h2>
+&lt;p>参考：&lt;a class="link" href="https://stackoverflow.com/questions/73338848/git-diff-show-nothing" target="_blank" rel="noopener"
 >如果git diff无反应怎么办&lt;/a>&lt;/p>
 &lt;p>merge 报错：&lt;a class="link" href="https://stackoverflow.com/questions/54746699/please-commit-your-changes-or-stash-them-before-you-merge" target="_blank" rel="noopener"
 >如果merge提示报错怎么办&lt;/a>&lt;/p>
-&lt;p>到此就完成了两个主机上博客的更新部署，只不过需要在更新的时候先检查远程和本地的区别，然后再选择是否更新。&lt;/p>
+&lt;p>hugo server 出现Page not found：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">WARN found no layout file &lt;span class="k">for&lt;/span> &lt;span class="s2">&amp;#34;html&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> layout &lt;span class="s2">&amp;#34;archives&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> kind &lt;span class="s2">&amp;#34;page&amp;#34;&lt;/span>: You should create a template file which matches Hugo Layouts Lookup Rules &lt;span class="k">for&lt;/span> this combination.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">WARN found no layout file &lt;span class="k">for&lt;/span> &lt;span class="s2">&amp;#34;html&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> kind &lt;span class="s2">&amp;#34;page&amp;#34;&lt;/span>: You should create a template file which matches Hugo Layouts Lookup Rules &lt;span class="k">for&lt;/span> this combination.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">WARN found no layout file &lt;span class="k">for&lt;/span> &lt;span class="s2">&amp;#34;html&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> layout &lt;span class="s2">&amp;#34;search&amp;#34;&lt;/span> &lt;span class="k">for&lt;/span> kind &lt;span class="s2">&amp;#34;page&amp;#34;&lt;/span>: You should create a template
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这种情况就是hugo的theme文件夹中的主题问题，因为之前配置过submodule，github pull下来之后，发现主题文件夹是空的，因为之前改过主题，所以直接把主题过来了，此时在生成就是动态的网页了。&lt;/p>
 &lt;h1 id="参考">参考&lt;/h1>
 &lt;p>Hugo actions的指导：https://github.com/peaceiris/actions-hugo&lt;/p>
 &lt;p>报错解决：https://www.youtube.com/watch?v=DMgEGpqXEM4&lt;/p>
