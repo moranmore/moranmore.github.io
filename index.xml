@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>moranmore's site</title><link>https://expanse.rsvp/</link><description>Recent content on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 10 Sep 2023 17:25:39 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac搭建环境</title><link>https://expanse.rsvp/p/mac%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 10 Sep 2023 17:25:39 +0800</pubDate><guid>https://expanse.rsvp/p/mac%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>moranmore's site</title><link>https://expanse.rsvp/</link><description>Recent content on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 05 Nov 2023 16:01:57 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/index.xml" rel="self" type="application/rss+xml"/><item><title>ssh-Keygen与密钥格式</title><link>https://expanse.rsvp/p/ssh-keygen%E4%B8%8E%E5%AF%86%E9%92%A5%E6%A0%BC%E5%BC%8F/</link><pubDate>Sun, 05 Nov 2023 16:01:57 +0800</pubDate><guid>https://expanse.rsvp/p/ssh-keygen%E4%B8%8E%E5%AF%86%E9%92%A5%E6%A0%BC%E5%BC%8F/</guid><description>&lt;h1 id="heading">&lt;/h1>
+&lt;p>的&lt;/p>
+&lt;p>ssh-keygen是用于生成ssh密钥对的程序，可以生成多种非对称加密（如RSA、ECC等）的密钥对，用于SSH登录认证或者其他需要使用签名的场合等等（如Github登录或仓库Actions的运行等）。&lt;/p>
+&lt;h1 id="opensslssh-keygen">openssl&amp;amp;ssh-keygen&lt;/h1>
+&lt;h2 id="两种生成密钥对的方法">两种生成密钥对的方法&lt;/h2>
+&lt;p>使用&lt;code>ssh-keygen &lt;/code>加对应的&lt;a class="link" href="https://en.wikipedia.org/wiki/Ssh-keygen#Command_syntax" target="_blank" rel="noopener"
+>选项参数&lt;/a>即可生成相关的密钥对，生成一个默认的密钥对只需要运行&lt;code>ssh-keygen&lt;/code>按照提示操作（默认目录是在家目录的.ssh目录中），以下是使用参数生成的密钥对，并指定目录&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ssh-keygen -t rsa -b &lt;span class="m">1024&lt;/span> -C &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>生成RSA密钥对(1024bits)&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">openssl genrsa -out test.key &lt;span class="m">1024&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="openssl读取私钥">openssl读取私钥&lt;/h2>
+&lt;p>使用openssl读取私钥&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">openssl rsa -in test.key -text
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="私钥结构">私钥结构&lt;/h2>
+&lt;h3 id="rsa私钥">RSA私钥&lt;/h3>
+&lt;p>一个RSA私钥的结构中包含了如下的几个部分。&lt;/p>
+&lt;ol>
+&lt;li>$\text{n}$模数&lt;/li>
+&lt;li>$\text{e}$公共指数，默认为65537&lt;/li>
+&lt;li>$\text{d}$私钥&lt;/li>
+&lt;li>$\text{p(q)}$第一个大质数&lt;/li>
+&lt;li>$\text{q(p)}$第二个大质数&lt;/li>
+&lt;li>$\text{dp}:d\pmod{p-1}$dp&lt;/li>
+&lt;li>$\text{dq}:d\pmod{q-1}$dq&lt;/li>
+&lt;li>$\text{coefficient}:q^{-1}\pmod{p}$&lt;/li>
+&lt;/ol>
+&lt;h4 id="使用python读取rsa私钥">使用Python读取RSA私钥&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">Crypto.PublicKey&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">RSA&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">Crypto.Util.number&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="o">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">with&lt;/span> &lt;span class="nb">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;test.key&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;rb&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">content&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">RSA&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">import_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">assert&lt;/span> &lt;span class="n">isPrime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">q&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">isPrime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">q&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">q&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="密钥格式">密钥格式&lt;/h1>
+&lt;p>输入的命令不同，生成的私钥内容也是有去别的，如果使用默认的&lt;code>ssh-keygen&lt;/code>生成的私钥文件是无法通过Openssl直接读取的，如果想要通过Openssl命令读取rsa私钥文件，需要在生成的时候使用&lt;code>openssl&lt;/code>命令。&lt;/p>
+&lt;p>这两种文件格式的开头和结尾也有区别，如果使用&lt;code>ssh-keygen&lt;/code>命令直接创建，开头和结尾为：&lt;code>-----BEGIN OPENSSH PRIVATE KEY-----&lt;/code>和&lt;code>-----END OPENSSH PRIVATE KEY-----&lt;/code>此时生成的是ssh的密钥；如果使用Openssl命令并指定的加密算法创建密钥对，生成的密钥对的开头和结尾是：&lt;code>-----BEGIN PRIVATE KEY-----&lt;/code>和&lt;code>-----END PRIVATE KEY-----&lt;/code>,这两种密钥对形式有相似，但是并不是一样的密钥类型，无法使用&lt;code>openssl rsa .....&lt;/code>命令读取ssh-keygen生成的ssh密钥，所以使用openssl命令读取ssh-keygen的私钥的时候无法成功。&lt;/p>
+&lt;h1 id="reference">Reference&lt;/h1>
+&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/OpenSSL" target="_blank" rel="noopener"
+>OpenSSL - wiki&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
+>OpenSSL - Toolkit&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Ssh-keygen" target="_blank" rel="noopener"
+>ssh-keygen - wiki&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://man.openbsd.org/OpenBSD-current/man1/ssh-keygen.1#NAME" target="_blank" rel="noopener"
+>ssh-keygen manual&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://security.stackexchange.com/questions/29876/what-are-the-differences-between-ssh-generated-keysssh-keygen-and-openssl-keys" target="_blank" rel="noopener"
+>What are the differences between ssh generated keys(ssh-keygen) and OpenSSL keys (PEM)and what is more secure for ssh remote login?&lt;/a>&lt;/p>
+&lt;p>[&lt;a class="link" href="https://superuser.com/questions/1679344/for-valid-pem-i-get-unable-to-load-private-key-by-openssh" target="_blank" rel="noopener"
+>For valid PEM I get unable to load private key by openssh&lt;/a>](&lt;a class="link" href="https://superuser.com/questions/1679344/for-valid-pem-i-get-unable-to-load-private-key-by-openssh" target="_blank" rel="noopener"
+>https://superuser.com/questions/1679344/for-valid-pem-i-get-unable-to-load-private-key-by-openssh&lt;/a>)&lt;/p>
+&lt;p>&lt;a class="link" href="https://blog.cryptohack.org/twitter-secrets" target="_blank" rel="noopener"
+>RECOVERING A FULL PEM PRIVATE KEY WHEN HALF OF IT IS REDACTED&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://pycryptodome.readthedocs.io/en/latest/src/public_key/rsa.html" target="_blank" rel="noopener"
+>PyCryptodome - readthedocs&lt;/a>&lt;/p></description></item><item><title>Mac搭建环境</title><link>https://expanse.rsvp/p/mac%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83/</link><pubDate>Sun, 10 Sep 2023 17:25:39 +0800</pubDate><guid>https://expanse.rsvp/p/mac%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
 &lt;p>本文主要记录的是CTF比赛 Crypto类中环境的搭建，根据本人的需要会随时更新文章，等不更新了就说明环境基本没什么变化了。&lt;/p>
 &lt;h1 id="系统">系统&lt;/h1>
 &lt;p>Homebrew的安装(二进制文件安装似乎不是很好用，总是报错)：&lt;/p>
