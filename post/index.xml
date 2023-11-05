@@ -790,12 +790,27 @@ data-flex-basis="522px"
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">hugo&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">post&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="mf">2023&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="err">文章标题&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">index&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nb">md
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">&lt;/span>&lt;span class="c"># 或者直接new post也可以&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>这样图片直接复制到当前文件夹就行了。&lt;/p>
+&lt;h2 id="开启katex支持">开启KaTex支持&lt;/h2>
+&lt;p>通过修改根目录下的&lt;code>config.yaml&lt;/code>中的&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">article&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">math&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>即可开启数学公式支持。&lt;/p>
 &lt;h1 id="双机更新">双机更新&lt;/h1>
 &lt;p>如果有两个不同系统的笔记本，比如一个Ubuntu和一个Windows，可以在两个设备上同时clone下来仓库，比如已经完成了另一个设备上的git安装，还没clone仓库到本地时候。&lt;/p>
 &lt;p>首先将私钥复制到用户目录的ssh文件中，然后在相关目录中直接：&lt;/p>
