@@ -1,4 +1,358 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on moranmore's site</title><link>https://expanse.rsvp/post/</link><description>Recent content in Posts on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 05 Nov 2023 16:01:57 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/post/index.xml" rel="self" type="application/rss+xml"/><item><title>ssh-Keygen与密钥格式</title><link>https://expanse.rsvp/p/ssh-keygen%E4%B8%8E%E5%AF%86%E9%92%A5%E6%A0%BC%E5%BC%8F/</link><pubDate>Sun, 05 Nov 2023 16:01:57 +0800</pubDate><guid>https://expanse.rsvp/p/ssh-keygen%E4%B8%8E%E5%AF%86%E9%92%A5%E6%A0%BC%E5%BC%8F/</guid><description>&lt;p>ssh-keygen是用于生成ssh密钥对的程序，可以生成多种非对称加密（如RSA、ECC等）的密钥对，用于SSH登录认证或者其他需要使用签名的场合等等（如Github登录或仓库Actions的运行等）。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on moranmore's site</title><link>https://expanse.rsvp/post/</link><description>Recent content in Posts on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 24 Dec 2023 23:18:59 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/post/index.xml" rel="self" type="application/rss+xml"/><item><title>使用Docker搭建简单静态网站</title><link>https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/</link><pubDate>Sun, 24 Dec 2023 23:18:59 +0800</pubDate><guid>https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>使用Docker+Cloudflare可以在自己的VPS服务器上搭建简易的静态网站。&lt;/p>
+&lt;p>采用的镜像为nginx镜像，同时在主机用nginx反向代理实现转发功能，使得输入域名就能访问相应的容器端口。&lt;/p>
+&lt;p>简单的说，可以通过反向代理，实现在输入不同的域名来访问主机的80端口时，将请求转发到其他的自定义端口，更容易部署和修改网站的服务。同时使用Cloudflare将解析指向自己的VPS，隐藏VPS真实IP。&lt;/p>
+&lt;p>对于原理没有特别多的解释，但是按照步骤来能实现稳定的访问。&lt;/p>
+&lt;p>在VPS上使用docker搭建简单静态网站并使用cloudflare&lt;/p>
+&lt;h1 id="dockerfile">Dockerfile&lt;/h1>
+&lt;p>静态网站只有一个主页，直接copy到html目录下就行（半年以内用docker-compose搭建复杂一点的网站）&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-dockerfile" data-lang="dockerfile">&lt;span class="line">&lt;span class="cl">&lt;span class="k">FROM&lt;/span>&lt;span class="s"> nginx:latest&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">COPY&lt;/span> index.html /usr/share/nginx/html/index.html&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">EXPOSE&lt;/span>&lt;span class="s"> 80&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="k">CMD&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;nginx&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;-g&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;daemon off;&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="cloudflare">Cloudflare&lt;/h1>
+&lt;h2 id="dns设置">DNS设置&lt;/h2>
+&lt;p>Websites添加购买的域名&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/add-domain-1703431646656-1.png"
+width="2093"
+height="248"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/add-domain-1703431646656-1_hu36bdc73d61086d49c631fa2ed23cef3c_42051_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/add-domain-1703431646656-1_hu36bdc73d61086d49c631fa2ed23cef3c_42051_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Websites选项卡"
+class="gallery-image"
+data-flex-grow="843"
+data-flex-basis="2025px"
+>&lt;/p>
+&lt;p>Add a site&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/Add-a-site-1703431646658-2.png"
+width="1339"
+height="422"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/Add-a-site-1703431646658-2_hu8f873858be2c9db38dfb7acd007ec098_34235_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/Add-a-site-1703431646658-2_hu8f873858be2c9db38dfb7acd007ec098_34235_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Add a site"
+class="gallery-image"
+data-flex-grow="317"
+data-flex-basis="761px"
+>&lt;/p>
+&lt;p>在输入框中输入域名&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/free-plan-1703431646658-3.png"
+width="1138"
+height="363"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/free-plan-1703431646658-3_hu11f62a2e9324b69e5e68691630c9ae85_32031_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/free-plan-1703431646658-3_hu11f62a2e9324b69e5e68691630c9ae85_32031_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="选择计划"
+class="gallery-image"
+data-flex-grow="313"
+data-flex-basis="752px"
+>&lt;/p>
+&lt;p>DNS设置&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/dns-process-1703431646658-4.png"
+width="1146"
+height="315"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/dns-process-1703431646658-4_hu78c0ad1a252729695f0113966e4b873e_29600_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/dns-process-1703431646658-4_hu78c0ad1a252729695f0113966e4b873e_29600_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="DNS设置流程"
+class="gallery-image"
+data-flex-grow="363"
+data-flex-basis="873px"
+>&lt;/p>
+&lt;p>这里可以直接继续，然后回到域名停放服务商，更改如下配置，一般找到含有&lt;code>nameservers&lt;/code>相关选项更改&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/remove-nameservers-1703431646658-5.png"
+width="664"
+height="197"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/remove-nameservers-1703431646658-5_hu0991bab1d81ed4e849724f6dc9c15a73_14895_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/remove-nameservers-1703431646658-5_hu0991bab1d81ed4e849724f6dc9c15a73_14895_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="移除记录"
+class="gallery-image"
+data-flex-grow="337"
+data-flex-basis="808px"
+>&lt;/p>
+&lt;p>添加记录&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/add-record-1703431646658-6.png"
+width="497"
+height="61"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/add-record-1703431646658-6_hu5b12ed5c109849f678f11a27e82b3294_3198_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/add-record-1703431646658-6_hu5b12ed5c109849f678f11a27e82b3294_3198_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="添加记录"
+class="gallery-image"
+data-flex-grow="814"
+data-flex-basis="1955px"
+>&lt;/p>
+&lt;p>完成&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/finish-1703431646659-10.png"
+width="364"
+height="147"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/finish-1703431646659-10_hu3412975a4d379893495aef65e5960629_3725_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/finish-1703431646659-10_hu3412975a4d379893495aef65e5960629_3725_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="完成DNS设置"
+class="gallery-image"
+data-flex-grow="247"
+data-flex-basis="594px"
+>&lt;/p>
+&lt;p>和http、https有关的设置&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/http-config-1703431646659-7.png"
+width="1025"
+height="623"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/http-config-1703431646659-7_hu6f8a78434ff477d1a75fd5eae53d528a_26737_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/http-config-1703431646659-7_hu6f8a78434ff477d1a75fd5eae53d528a_26737_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="http设置"
+class="gallery-image"
+data-flex-grow="164"
+data-flex-basis="394px"
+>&lt;/p>
+&lt;p>接下来就是检查设置完成状态（完成后会发送邮件）&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/check-nameservers-1703431646659-8.png"
+width="706"
+height="88"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/check-nameservers-1703431646659-8_hu88d8e5a4a3d9e50ceff9b118e6bd6b52_8171_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/check-nameservers-1703431646659-8_hu88d8e5a4a3d9e50ceff9b118e6bd6b52_8171_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="检测状态"
+class="gallery-image"
+data-flex-grow="802"
+data-flex-basis="1925px"
+>&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/finish-dns-1703431646659-9.png"
+width="775"
+height="127"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/finish-dns-1703431646659-9_hud3edb89a0d9a7b7e11d4f3bb61606e9b_13107_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/finish-dns-1703431646659-9_hud3edb89a0d9a7b7e11d4f3bb61606e9b_13107_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="完成设置DNS"
+class="gallery-image"
+data-flex-grow="610"
+data-flex-basis="1464px"
+>&lt;/p>
+&lt;h2 id="修改记录">修改记录&lt;/h2>
+&lt;p>左侧DNS设置&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/point-to-server-1703431646659-11.png"
+width="286"
+height="216"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/point-to-server-1703431646659-11_hu4f897ae621fa163b69c97021f7b147d4_7049_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/point-to-server-1703431646659-11_hu4f897ae621fa163b69c97021f7b147d4_7049_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="DNS记录设置"
+class="gallery-image"
+data-flex-grow="132"
+data-flex-basis="317px"
+>&lt;/p>
+&lt;p>修改记录，使用一条A记录指向VPS主机&lt;/p>
+&lt;h2 id="ssl-tls设置">SSL TLS设置&lt;/h2>
+&lt;p>采用Strict模式（四种模式区别主要在于是否采用加密，是否采用VPS到Cloudflare之间加密）&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/full-strict-1703431646659-12.png"
+width="1187"
+height="1087"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/full-strict-1703431646659-12_hua54376800dd87b23b702f55dc1c8867e_85821_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/full-strict-1703431646659-12_hua54376800dd87b23b702f55dc1c8867e_85821_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Full模式"
+class="gallery-image"
+data-flex-grow="109"
+data-flex-basis="262px"
+>&lt;/p>
+&lt;p>证书类别&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/certificate-1703431646659-14.png"
+width="267"
+height="203"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/certificate-1703431646659-14_hu0b7d61e33e989c58078b6026d1941925_7156_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/certificate-1703431646659-14_hu0b7d61e33e989c58078b6026d1941925_7156_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="证书类别"
+class="gallery-image"
+data-flex-grow="131"
+data-flex-basis="315px"
+>&lt;/p>
+&lt;p>边缘证书：指从用户浏览器到Cloudflare之间的加密证书&lt;/p>
+&lt;p>服务端证书：指Cloudflare到VPS之间加密证书&lt;/p>
+&lt;p>边缘证书是已经设置好的，会自动续期，不需要更改这里的配置&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/edge-cert-1703431646659-15.png"
+width="1204"
+height="630"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/edge-cert-1703431646659-15_hue2aab44c47e4b1923930687ce25a9186_58730_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/edge-cert-1703431646659-15_hue2aab44c47e4b1923930687ce25a9186_58730_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="边缘证书"
+class="gallery-image"
+data-flex-grow="191"
+data-flex-basis="458px"
+>&lt;/p>
+&lt;p>设置客户端证书&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/client-cert-1703431646659-13.png"
+width="1189"
+height="980"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/client-cert-1703431646659-13_hu66016e68f0c881215e06e1c084900265_56044_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/client-cert-1703431646659-13_hu66016e68f0c881215e06e1c084900265_56044_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="客户端证书"
+class="gallery-image"
+data-flex-grow="121"
+data-flex-basis="291px"
+>&lt;/p>
+&lt;p>把pem格式证书存到本地&lt;/p>
+&lt;p>设置Origin Server加密（Customize encryption of traffic between your origin server and Cloudflare.）&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/origin-server-enc-1703431646659-16.png"
+width="1261"
+height="314"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/origin-server-enc-1703431646659-16_hu7a4a440f00d773dc9890ff6e6dc10144_25636_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/origin-server-enc-1703431646659-16_hu7a4a440f00d773dc9890ff6e6dc10144_25636_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Origin Server"
+class="gallery-image"
+data-flex-grow="401"
+data-flex-basis="963px"
+>&lt;/p>
+&lt;p>设置说明&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/origin-server-info-1703431646659-17.png"
+width="1198"
+height="539"
+srcset="https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/origin-server-info-1703431646659-17_huc6fd4d9a9b0066430390e4df865530bd_45204_480x0_resize_box_3.png 480w, https://expanse.rsvp/p/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/origin-server-info-1703431646659-17_huc6fd4d9a9b0066430390e4df865530bd_45204_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="设置说明"
+class="gallery-image"
+data-flex-grow="222"
+data-flex-basis="533px"
+>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Origin Certificate Installation
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Save the certificate and private key below to your client. To save, Click to copy and paste the contents into different files on your client, e.g. example.com.pem and example.com.key
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Origin Certificate
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Private key
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Copy the contents of your private key below to your web server and set file permissions such that only your http server can access it. Additionally, you can optionally encrypt this file and provide a password to decrypt it during your origin web server startup. The private key data will not be stored at Cloudflare and will no longer be accessible once the creation is complete. Please make sure you have a local copy of this key.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="nginx反向代理">Nginx反向代理&lt;/h1>
+&lt;p>在宿主机上安装nginx&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt install nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># after config &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl reload nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl restart nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># stop&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl stop nginx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>配置文件&lt;code>xxxx.conf&lt;/code> 存放的位置&lt;code>/etc/nginx/sites-available/[flag].conf&lt;/code>&lt;/p>
+&lt;p>这里的域名和端口都需要按照个人的需求更改&lt;code>[flag: 说明]&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">server &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> listen 80&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="m">301&lt;/span> https://&lt;span class="nv">$host$request_uri&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">server &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> server_name &lt;span class="o">[&lt;/span>flag:domain&lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> listen &lt;span class="m">443&lt;/span> ssl http2&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl on&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl_session_cache builtin:1000 shared:SSL:10m&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl_protocols TLSv1 TLSv1.1 TLSv1.2&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl_prefer_server_ciphers on&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl_certificate /etc/nginx/&lt;span class="o">[&lt;/span>flag:path to store key&lt;span class="o">]&lt;/span>/&lt;span class="o">[&lt;/span>flag:domain&lt;span class="o">]&lt;/span>.pem&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ssl_certificate_key /etc/nginx/&lt;span class="o">[&lt;/span>flag:path to store key&lt;span class="o">]&lt;/span>/&lt;span class="o">[&lt;/span>flag:domain&lt;span class="o">]&lt;/span>.key&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location / &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_set_header Host &lt;span class="nv">$host&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_set_header X-Real-IP &lt;span class="nv">$remote_addr&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_set_header X-Forwarded-For &lt;span class="nv">$proxy_add_x_forwarded_for&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_set_header X-Forwarded-Proto &lt;span class="nv">$scheme&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_read_timeout 90&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_redirect http://&lt;span class="o">[&lt;/span>flag:host ip&lt;span class="o">]&lt;/span>:&lt;span class="o">[&lt;/span>flag:host port&lt;span class="o">]&lt;/span> https://&lt;span class="o">[&lt;/span>flag:domain&lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://&lt;span class="o">[&lt;/span>flag:host ip&lt;span class="o">]&lt;/span>:&lt;span class="o">[&lt;/span>flag:host port&lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>软链接&lt;code>sudo ln -s /etc/nginx/sites-available/proxy.conf /etc/nginx/sites-enabled/&lt;/code>，完成配置之后重启nginx服务。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo systemctl reload nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl restart nginx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="启动">启动&lt;/h1>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 根据当前目录Dockerfile生成image&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker build -t &lt;span class="o">[&lt;/span>flag&lt;span class="o">]&lt;/span> .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 运行&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d -p &lt;span class="o">[&lt;/span>flag:host port&lt;span class="o">]&lt;/span>:80 --name &lt;span class="o">[&lt;/span>flag:container name&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>flag:image name&lt;span class="o">]&lt;/span>:&lt;span class="o">[&lt;/span>flag:image tag&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start nginx.service
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> nginx.service
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 检查nginx状态&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemctl status nginx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>ssh-Keygen与密钥格式</title><link>https://expanse.rsvp/p/ssh-keygen%E4%B8%8E%E5%AF%86%E9%92%A5%E6%A0%BC%E5%BC%8F/</link><pubDate>Sun, 05 Nov 2023 16:01:57 +0800</pubDate><guid>https://expanse.rsvp/p/ssh-keygen%E4%B8%8E%E5%AF%86%E9%92%A5%E6%A0%BC%E5%BC%8F/</guid><description>&lt;p>ssh-keygen是用于生成ssh密钥对的程序，可以生成多种非对称加密（如RSA、ECC等）的密钥对，用于SSH登录认证或者其他需要使用签名的场合等等（如Github登录或仓库Actions的运行等）。&lt;/p>
 &lt;h1 id="opensslssh-keygen">openssl&amp;amp;ssh-keygen&lt;/h1>
 &lt;h2 id="两种生成密钥对的方法">两种生成密钥对的方法&lt;/h2>
 &lt;p>使用&lt;code>ssh-keygen &lt;/code>加对应的&lt;a class="link" href="https://en.wikipedia.org/wiki/Ssh-keygen#Command_syntax" target="_blank" rel="noopener"
