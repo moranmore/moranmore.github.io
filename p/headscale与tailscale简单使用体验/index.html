@@ -92,7 +92,7 @@ Or可以让多台设备加入一个公网VPS，让不同地点的用户访问对
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo tailscale <span class=nb>set</span> --exit-node racknerd-54fdc0
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo tailscale <span class=nb>set</span> --exit-node <span class=o>[</span>flag: VPS hostname<span class=o>]</span>
 </span></span><span class=line><span class=cl>tailscale up --advertise-exit-node --login-server<span class=o>=</span>http://<span class=o>[</span>flag: your vps public ip address<span class=o>]</span>:8080
 </span></span><span class=line><span class=cl>sudo tailscale up --advertise-exit-node
 </span></span><span class=line><span class=cl> <span class=c1># 运行完上面的命令之后，在vps上查看路由</span>
