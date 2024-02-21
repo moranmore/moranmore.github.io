@@ -135,7 +135,7 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tailscale up --advertise-exit-node --login-server&lt;span class="o">=&lt;/span>http://&lt;span class="o">[&lt;/span>flag: your vps public ip address&lt;span class="o">]&lt;/span>:8080
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo tailscale up --advertise-exit-node
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 运行完上面的命令之后，在vps上查看路由&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> headscale routes list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">headscale routes list
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 开启路由：标志位是上面命令现实出来的第一列参数：ID，在一个外部节点的情况下直接enable前两个路由&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> headscale routes &lt;span class="nb">enable&lt;/span> -r &lt;span class="o">[&lt;/span>flag&lt;span class="o">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
