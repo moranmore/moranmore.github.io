@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AES on moranmore's site</title><link>https://expanse.rsvp/tags/aes/</link><description>Recent content in AES on moranmore's site</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 06 Mar 2024 16:44:32 +0800</lastBuildDate><atom:link href="https://expanse.rsvp/tags/aes/index.xml" rel="self" type="application/rss+xml"/><item><title>AES及几种加密模式</title><link>https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/</link><pubDate>Wed, 06 Mar 2024 16:44:32 +0800</pubDate><guid>https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>本文仅针对AES加密的模式简单总结，不涉及过多数学原理知识。&lt;/p>
+&lt;h1 id="aes加密解密">AES加密解密&lt;/h1>
+&lt;p>AES是一种对称加密方案，需要密钥与密文完成加密与解密（加密与解密采用相同的密钥），在采取不同的加密模式的时候，需要加入初始化向量（iv）。&lt;/p>
+&lt;p>AES采取的是块加密的方式，将明文按照16个字节一组，加密后输出16个字节长度的密文块。&lt;/p>
+&lt;p>想要熟练的明白AES的加密流程，最好的方式就是动手实现一边AES的加密流程。Cryptohack的对称加密教程中，提供了这个训练，如果能在不借助其他工具的情况下，手动完成AES的解密模块，有助于理解AES的解密与加密的关系。&lt;/p>
+&lt;h2 id="加密流程">加密流程&lt;/h2>
+&lt;p>AES的加密流程中有几个定义需要简单了解，分别是Subbytes、ShiftRows、Columns、Add Round key。&lt;/p>
+&lt;p>在后面的几种加密模式和针对加密模式的攻击中，大多数没有涉及到过于底层的原理，大多数与代码的设计缺陷有关系。&lt;/p>
+&lt;p>在根据CryptoHack课程中，解密是从图片下到上解密的，小方格中的也是从下到上面的流程。如果检查过后还是无法解密，可以按照搜索的视频进行检查。&lt;/p>
+&lt;h1 id="加密模式">加密模式&lt;/h1>
+&lt;p>AES的几种常见加密方案&lt;/p>
+&lt;h2 id="ecb">ECB&lt;/h2>
+&lt;p>ECB（电子密码本）模式，使用密钥对分块的明文加密，不需要初始化向量。&lt;/p>
+&lt;p>Oracle，英文指的是预言、神谕的意思，CTF中一般指的是可以通过与服务器交互的情况获取一定量信息解题的情况。&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/ECB_encryption.svg"
+loading="lazy"
+alt="ECB加密"
+>&lt;/p>
+&lt;p>解密过程&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/ECB_decryption.svg"
+loading="lazy"
+alt="ECB解密"
+>&lt;/p>
+&lt;p>ECB的一个重要特征是当明文块相同的情况下密文也是相同的（密钥不变），使用16字节的密钥加密16字节的明文。&lt;/p>
+&lt;p>举例如下 ：&lt;/p>
+&lt;p>加密&lt;code>AAAABBBBCCCCDDDD&lt;/code>与&lt;code>AAAABBBBCCCCDDDD&lt;/code>的密文是相同的，如果改变最后一个字母，服务端返回的结果会发生变化，而且不只是一个字节发生变化，而是整个加密的块会发生很大的变化。&lt;/p>
+&lt;h3 id="场景">场景&lt;/h3>
+&lt;p>Oracle情况下，可以通过枚举的方式来获取明文&lt;/p>
+&lt;p>服务端可以运行加密程序，返回的是加密之后的密文（发送的明文+加密的明文，CTF中可能是选手发送的一段明文+加密的flag），不会给出密钥。&lt;/p>
+&lt;p>下文中出现了两种块，“构造块”是指的用于查询的块，长度是单位块长的n倍，是16*n字节，加密的块一般指的是16个字节的单位长度。&lt;/p>
+&lt;p>构造两个相邻的块，第一个块可以是全部相同的字符，第二个块的长度比第一个块缺少一个字符。经过构造，返回的第二个密文块的最后一个字符就是flag的第一个加密字符。&lt;/p>
+&lt;p>可以通过发送&lt;code>AAAAAAAAAAAAAAAA&lt;/code>（16个A）作为第一个块，第二个块&lt;code>AAAAAAAAAAAAAAA&lt;/code>（15个A）作为第二个块，加密之后，flag的第一个字符会补充到第二个加密块的最后一个位置上，就会变成如下的形式&lt;code>AAAAAAAAAAAAAAAA&lt;/code>与&lt;code>AAAAAAAAAAAAAAAc&lt;/code>加密之后的密文，通过反复改变第一个块最后一个位置的字符，直到第一个块的密文和第二个块密文相同的时候，第一个块的最后一个字符就是flag的第一个字符。&lt;/p>
+&lt;p>构造块的长度需要满足密文所占用块的长度，当密文占用两个块，构造的块占用两个单位块长度（32bytes）。&lt;/p>
+&lt;p>具体步骤如下：&lt;/p>
+&lt;p>1，判断明文（flag）长度，如果明文的长度不超过一个字节，两个块的长度都是16字节，依次类推，构造的块长度总是16字节的2n倍（n是明文占用的块长，可以用&lt;code>n=len(m)//16+1&lt;/code>来计算）。&lt;/p>
+&lt;p>2，与服务器进行交互，当满足每两个块的密文相同的时候，去掉每个块第一个字符，将最后一个字符（枚举成功的字符）加入到结果中。枚举的明文空间可以用&lt;code>string&lt;/code>库中的&lt;code>string.printable&lt;/code>，&lt;code>table = string.printable[:-5]&lt;/code>去掉了换行符、制表符等字符（flag一般不会采用的字符）。&lt;/p>
+&lt;p>3，直到有明文特征的情况出现时，完成枚举明文（比如&lt;code>}&lt;/code>字符出现的时候）。&lt;/p>
+&lt;h3 id="script">script&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">requests&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">bruteSingle&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lenth&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">32&lt;/span> &lt;span class="c1"># lenth = len(flag)//16 +1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listToString&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="nb">hex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">ord&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]))[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">:]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">))])&lt;/span> &lt;span class="c1"># 匿名函数用于转换格式&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">reponse&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">splitCiphertext&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;&amp;#34;:&amp;#34;&amp;#39;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][:&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">splitString&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">table&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">printable&lt;/span>&lt;span class="p">[:&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">table&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">table&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">table&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;a&amp;#39;&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">lenth&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">block1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">copy&lt;/span>&lt;span class="p">()[:&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="c1"># 复制块1，并且让块2的长度小于块1，python的数组可以通过.copy() 进行复制，否则会直接在原数组上修改&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">flag&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">query&lt;/span> &lt;span class="n">url&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="c1"># 题目交互url&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flag&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="s1">&amp;#39;}&amp;#39;&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">flag&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">table&lt;/span>&lt;span class="p">)):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block1&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">table&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">block1&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">block2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sendBlock&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">listToString&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">block&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">query&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">url&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">sendBlock&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tmpResult&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">reponse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">query&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tmp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">splitCiphertext&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tmpResult&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tmp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">splitString&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">tmp&lt;/span>&lt;span class="p">[:&lt;/span>&lt;span class="mi">31&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">63&lt;/span>&lt;span class="p">]:&lt;/span> &lt;span class="c1"># 判断第一个块与第二个块是否完全相同，这里的索引需要根据lenth更改&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flag&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">block1&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">block1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">copy&lt;/span>&lt;span class="p">()[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">:]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">block2&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">block2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pop&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s1">&amp;#39;New block1:&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">block1&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">block&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">res&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">flag&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s1">&amp;#39;FLAG:&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">res&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">flag&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bruteSingle&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="cbc">CBC&lt;/h2>
+&lt;p>CBC（密码分组链接模式）模式，加入了初始化向量（一个16bytes的字符串），在对第一个明文块加密的时候，先将明文与IV异或运算，再用密钥将异或的结果进行加密，得到第一个块的密文，第一个块的密文同时将与第二个明文块异或，依次进行，直到加密完成。&lt;/p>
+&lt;p>解密是加密的逆过程，对于第一个密文快，先用密钥解密密文，再把解密之后的信息与向量异或，得到第一个明文块，再利用第一个密文块与用密钥解密第二个密文块的信息进行异或，得到第二个明文块，直到解密全部结束。&lt;/p>
+&lt;p>加密过程：&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/CBC_encryption.svg"
+loading="lazy"
+alt="CBC解密过程"
+>&lt;/p>
+&lt;p>解密过程：&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/CBC_decryption.svg"
+loading="lazy"
+alt="CBC解密过程"
+>&lt;/p>
+&lt;p>在CBC的加密与解密过程中，存在一个类似中间变量的信息，如加密过程中，明文与向量异或后的结果，作为块加密的输入，可以看作新的的明文。在解密过程中，可以发现，这个过程被逆向进行，由密文被解密之后的信息，实际上可以与向量异或，得到明文。这带来了两个可以观察出来的结论，第一个就是加密解密过程中参与异或运算得到的信息才是参与加密解密的主体，第二个就是在加密与解密过程中，这个异或的结果是不容易被改变的。这两个特征更有利于后面的攻击利用的思考（攻击的过程可改变的变量可以被限制在一定的变量范围内）。&lt;/p>
+&lt;h3 id="场景-1">场景&lt;/h3>
+&lt;p>伪造cookie登录验证&lt;/p>
+&lt;p>在需要登录验证的情况下，如当下发cookie的明文为：&lt;code>admin=False=expire{xxxxx}&lt;/code>的格式，同时向量可以自行输入的情况下，伪造向量，使得向量与中加密的中间变量异或之后得到的明文中含有&lt;code>admin=True&lt;/code>就能完成登录。&lt;/p>
+&lt;h3 id="script-1">script&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_cookie&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">expires_at&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">today&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">timedelta&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">days&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">))&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cookie&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;admin=False;expiry=&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">expires_at&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cookie&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># iv = os.urandom(16)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;iv&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">iv&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hex&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">padded&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pad&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cookie&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">16&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cipher&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">AES&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">AES&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MODE_CBC&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">iv&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">encrypted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cipher&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">padded&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ciphertext&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">iv&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hex&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">encrypted&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hex&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;ciphertext&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ciphertext&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ciphertext&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Proof&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 伪造iv&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">Crypto.Util.number&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="o">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># {&amp;#34;cookie&amp;#34;:&amp;#34;89d93137d13043d9ee4efaf75c2ca9a0a0f37efb466cf36ec9cf5b5a86741ff2a7af80f5f4b652c442dfb633bb5d18cb&amp;#34;}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cookie&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;d70005d58d2b81fa136d724eb00c240affd6d12e7e1e00e7235fea77f027e07e003ddfce55fd1e8fd2450759f3823917&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># cookie = get_cookie()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">initiv&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">cookie&lt;/span>&lt;span class="p">[:&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cookie&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">:])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># initiv = &amp;#39;25120708a0d45e54dde66e4a50032340&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">old&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">b&lt;/span>&lt;span class="s1">&amp;#39;admin=False;expi&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">realenc&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bytes_to_long&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">old&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">^&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">initiv&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fak&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">b&lt;/span>&lt;span class="s1">&amp;#39;admin=True;eexpi&amp;#39;&lt;/span> &lt;span class="c1">#　构造虚假向量的时候需要注意split函数分割后的结果需要完全匹配，构造成b&amp;#39;admin=Truee;expi&amp;#39;分割后的第一部分为&amp;#39;admin=Truee&amp;#39;，不符合规则&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fakeiv&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bytes_to_long&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fak&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">^&lt;/span>&lt;span class="n">realenc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">hex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fakeiv&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">:])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># print(check_admin(cookie[32:], hex(fakeiv)[2:]))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="ctr">CTR&lt;/h2>
+&lt;p>Nonce的变化模式，当Nonce没有变化的情况下，iv经过密钥加密之后的密文不变，从而使得整个加密相当于用iv与明文进行异或，补充iv到与密文相同长度，找到十六进制再异或就行。CTR模式没有类似CBC模式的密文之间的联系，所以可以采取并行的方式进行解密。&lt;/p>
+&lt;p>加密过程：&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/CTR_encryption_2.svg"
+loading="lazy"
+alt="CTR_encryption"
+>&lt;/p>
+&lt;p>解密过程：&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/CTR_decryption_2.svg"
+loading="lazy"
+alt="CTR_decryption"
+>&lt;/p>
+&lt;h3 id="场景-2">场景&lt;/h3>
+&lt;p>图片以hex格式进行加密，按照加密解密的说明进行解密就行，需要注意的是如果win下无法打开，可以在文件管理器另存为的时候看到缩略图。&lt;/p>
+&lt;h3 id="脚本">脚本&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">enciv&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">long_to_bytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">headerOfPNG&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">^&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">[:&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">],&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">enciv&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hex&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;e3f227f06fd15d34d58b897cabdef07b&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># hexXor = lambda x,y:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">paddingHex&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">aim&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">aim&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">aim&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="s1">&amp;#39;00&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hexToList&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:[&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hexListXor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">lambda&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">:[&lt;/span>&lt;span class="nb">hex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">],&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">^&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">],&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="p">))[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">:]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zfill&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">))]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hexListXor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hexToList&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="n">hexToList&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">paddingHex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">))))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">flag&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hexListXor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hexToList&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="n">hexToList&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">paddingHex&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">))))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">with&lt;/span> &lt;span class="nb">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;flag.txt&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;w&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">flag&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">close&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 以十六进制的图片，使用010editor的paste from hex进行存储为png格式即可，可使用缩略图查看&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>⚠：这里的图片无法正常打开，所以用的是缩略图， 以后有时间补充这部分。&lt;/p>
+&lt;h2 id="ofb">OFB&lt;/h2>
+&lt;p>OFB（输出反馈模式）模式是使用密钥加密初始化向量，将这个结果反复作为下一个块的初始向量，同时这个结果与对应块的明文进行异或获得对应的密文。解密过程为逆过程。&lt;/p>
+&lt;p>加密过程：&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/OFB_encryption.svg"
+loading="lazy"
+alt="OFB加密"
+>&lt;/p>
+&lt;p>解密过程：&lt;/p>
+&lt;p>&lt;img src="https://expanse.rsvp/p/aes%E5%8F%8A%E5%87%A0%E7%A7%8D%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/OFB_decryption.svg"
+loading="lazy"
+alt="OFB解密"
+>&lt;/p>
+&lt;h3 id="场景-3">场景&lt;/h3>
+&lt;p>虽然无法得知密钥，但是由于加密最后一步是异或，只要可以构造中间变量，就能通过异或获取明文，将原始用于加密的向量作为第二次加密的向量，将密文作为第二次加密的明文，第二次加密的结果就是明文。&lt;/p>
+&lt;h3 id="script-2">script&lt;/h3>
+&lt;h1 id="参考">参考&lt;/h1>
+&lt;p>AES加密过程：https://www.youtube.com/watch?v=gP4PqVGudtg&lt;/p>
+&lt;p>CryptoHack symmetric：https://cryptohack.org/courses/symmetric/course_details/&lt;/p>
+&lt;p>维基百科：https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation&lt;/p></description></item></channel></rss>

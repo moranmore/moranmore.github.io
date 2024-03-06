@@ -170,7 +170,9 @@ SSL TLS设置 采用Strict模式（四种模式区别主要在于是否采用加
 </span></span><span class=line><span class=cl><span class=o>}</span>
 </span></span></code></pre></td></tr></table></div></div><p>软链接<code>sudo ln -s /etc/nginx/sites-available/proxy.conf /etc/nginx/sites-enabled/</code>，完成配置之后重启nginx服务。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo systemctl reload nginx
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo nginx -s reload
+</span></span><span class=line><span class=cl>sudo systemctl reload nginx
 </span></span><span class=line><span class=cl>sudo systemctl restart nginx
 </span></span></code></pre></td></tr></table></div></div><h1 id=启动>启动</h1><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
