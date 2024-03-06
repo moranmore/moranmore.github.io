@@ -211,7 +211,7 @@ alt="CTR_decryption"
 >&lt;/p>
 &lt;h3 id="场景-2">场景&lt;/h3>
 &lt;p>图片以hex格式进行加密，按照加密解密的说明进行解密就行，需要注意的是如果win下无法打开，可以在文件管理器另存为的时候看到缩略图。&lt;/p>
-&lt;h3 id="脚本">脚本&lt;/h3>
+&lt;h3 id="script-2">script&lt;/h3>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -261,7 +261,7 @@ alt="OFB解密"
 >&lt;/p>
 &lt;h3 id="场景-3">场景&lt;/h3>
 &lt;p>虽然无法得知密钥，但是由于加密最后一步是异或，只要可以构造中间变量，就能通过异或获取明文，将原始用于加密的向量作为第二次加密的向量，将密文作为第二次加密的明文，第二次加密的结果就是明文。&lt;/p>
-&lt;h3 id="script-2">script&lt;/h3>
+&lt;h3 id="script-3">script&lt;/h3>
 &lt;h1 id="参考">参考&lt;/h1>
 &lt;p>AES加密过程：https://www.youtube.com/watch?v=gP4PqVGudtg&lt;/p>
 &lt;p>CryptoHack symmetric：https://cryptohack.org/courses/symmetric/course_details/&lt;/p>
